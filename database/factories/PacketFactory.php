@@ -18,7 +18,7 @@ class PacketFactory extends Factory
     {
         return [
             'name' => fake()->name(),
-            'desc' => fake()->name(),
+            'desc' => fake()->sentence(),
             'name_polish' => fake()->name(),
             'name_latin' => fake()->name(),
             'producer' => fake()->name(),

@@ -13,3 +13,13 @@ const PACKET_JSON_RESPONSE =
     "created_at",
     "updated_at"
 ];
+
+const PRODUCER_JSON_RESPONSE =
+[
+    "id",
+    "name",
+    "desc",
+    "country",
+    "created_at",
+    "updated_at"
+];
