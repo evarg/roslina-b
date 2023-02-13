@@ -1,0 +1,70 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\StorepacketRequest;
+use App\Http\Requests\UpdatepacketRequest;
+use App\Models\Packet;
+use Illuminate\Http\JsonResponse;
+
+class PacketController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return new JsonResponse(Packet::all(), 200);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \App\Http\Requests\StorepacketRequest  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(StorepacketRequest $request)
+    {
+        $packet = new Packet($request->all());
+        $packet->save();
+        return new JsonResponse(Packet::find($packet->id), 201);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\packet  $packet
+     * @return \Illuminate\Http\Response
+     */
+    public function show(packet $packet)
+    {
+        return new JsonResponse($packet, 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \App\Http\Requests\UpdatepacketRequest  $request
+     * @param  \App\Models\packet  $packet
+     * @return \Illuminate\Http\Response
+     */
+    public function update(UpdatepacketRequest $request, packet $packet)
+    {
+        $packet->update($request->all());;
+        return new JsonResponse($packet, 201);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\packet  $packet
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(packet $packet)
+    {
+        $packet->delete();
+        return new JsonResponse(null, 201);
+    }
+}
