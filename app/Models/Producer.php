@@ -14,4 +14,9 @@ class Producer extends Model
         'desc',
         'country',
     ];
+
+    public function packets()
+    {
+        return $this->hasMany(Packet::class);
+    }
 }
