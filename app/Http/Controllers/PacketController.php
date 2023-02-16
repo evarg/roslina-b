@@ -16,7 +16,7 @@ class PacketController extends Controller
      */
     public function index()
     {
-        return new JsonResponse(Packet::all(), 200);
+        return new JsonResponse(Packet::with('producer')->get(), 200);
     }
 
     /**
@@ -29,7 +29,9 @@ class PacketController extends Controller
     {
         $packet = new Packet($request->all());
         $packet->save();
-        return new JsonResponse(Packet::find($packet->id), 201);
+
+        $packet = Packet::with('producer')->find($packet->id);
+        return new JsonResponse($packet, 201);
     }
 
     /**
@@ -40,6 +42,7 @@ class PacketController extends Controller
      */
     public function show(packet $packet)
     {
+        $packet->producer = $packet->producer;
         return new JsonResponse($packet, 200);
     }
 
@@ -53,6 +56,7 @@ class PacketController extends Controller
     public function update(UpdatepacketRequest $request, packet $packet)
     {
         $packet->update($request->all());;
+        //$packet->producer = $packet->producer;
         return new JsonResponse($packet, 201);
     }
 

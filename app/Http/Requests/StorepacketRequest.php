@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class StorepacketRequest extends FormRequest
+class StorePacketRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +25,10 @@ class StorepacketRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:2|max:200'
+            'name' => 'required|min:2|max:200',
+            'producer_id' => [
+                'integer', 'exists:producers,id'
+            ],
         ];
     }
 }

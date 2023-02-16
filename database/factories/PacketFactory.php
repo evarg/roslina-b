@@ -21,7 +21,6 @@ class PacketFactory extends Factory
             'desc' => fake()->sentence(),
             'name_polish' => fake()->name(),
             'name_latin' => fake()->name(),
-            'producer' => fake()->name(),
             'expiration_date' => fake()->date('Y_m_d','2030-03-01'),
             'purchase_date'  => fake()->date(),
         ];
