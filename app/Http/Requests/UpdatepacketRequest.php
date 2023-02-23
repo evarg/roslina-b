@@ -25,7 +25,7 @@ class UpdatePacketRequest extends FormRequest
     {
         return [
             'name' => 'required|min:2|max:200',
-            'producer_id' => 'exists:producers,id'
+            'producer_id' => 'required|exists:producers,id'
         ];
     }
 }
