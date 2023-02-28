@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\PacketController;
 use App\Http\Controllers\ProducerController;
+use App\Http\Controllers\FileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,3 +23,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('packets', PacketController::class);
 Route::apiResource('producers', ProducerController::class);
+Route::apiResource('files', FileController::class);
