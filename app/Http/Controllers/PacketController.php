@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorepacketRequest;
 use App\Http\Requests\UpdatepacketRequest;
 use App\Models\Packet;
+use App\Models\File;
 use Illuminate\Http\JsonResponse;
 
 class PacketController extends Controller
@@ -70,5 +71,16 @@ class PacketController extends Controller
     {
         $packet->delete();
         return new JsonResponse(null, 201);
+    }
+
+    public function addFile(string $id, string $fileID)
+    {
+        $packet = Packet::findOrFail($id);
+        $file = File::findOrFail($fileID);
+
+        $packet->files()->attach($file);
+        $packet->save();
+
+        return new JsonResponse($packet, 201);
     }
 }

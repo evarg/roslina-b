@@ -3,6 +3,8 @@
 use App\Http\Controllers\PacketController;
 use App\Http\Controllers\ProducerController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\UploadController;
+use App\Models\Packet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,5 +24,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('packets', PacketController::class);
+
+Route::get('packets/{id}/add_file/{fileId}', [PacketController::class, 'addFile']);
+
 Route::apiResource('producers', ProducerController::class);
 Route::apiResource('files', FileController::class);
+Route::apiResource('upload', UploadController::class);
+
