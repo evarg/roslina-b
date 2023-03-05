@@ -83,4 +83,17 @@ class PacketController extends Controller
 
         return new JsonResponse($packet, 201);
     }
+
+    public function removeFile(string $id, string $fileID)
+    {
+        $packet = Packet::findOrFail($id);
+        $file = File::findOrFail($fileID);
+
+        $packet->files()->detach($file);
+        $packet->save();
+
+        return new JsonResponse($packet, 201);
+    }
+
+
 }

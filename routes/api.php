@@ -26,6 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::apiResource('packets', PacketController::class);
 
 Route::get('packets/{id}/add_file/{fileId}', [PacketController::class, 'addFile']);
+Route::get('packets/{id}/remove_file/{fileId}', [PacketController::class, 'removeFile']);
+
 
 Route::apiResource('producers', ProducerController::class);
 Route::apiResource('files', FileController::class);
