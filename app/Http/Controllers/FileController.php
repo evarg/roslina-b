@@ -6,6 +6,7 @@ use App\Models\File;
 use App\Http\Requests\StoreFileRequest;
 use App\Http\Requests\UpdateFileRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -18,17 +19,6 @@ class FileController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -39,6 +29,9 @@ class FileController extends Controller
      */
     public function store(StoreFileRequest $request)
     {
+        $path = $request->file('image')->store('public');
+        return new JsonResponse($path, 201);
+
         $file = new File($request->all());
         $file->file_name = $request->file('image')->store('images');
         $file->org_name = $request->file('image')->getClientOriginalName();
