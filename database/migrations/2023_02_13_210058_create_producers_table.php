@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('producers', function (Blueprint $table) {
             $table->id();
             $table->string('name', 200);
-            $table->string('desc')->nullable();
+            $table->text('desc')->nullable();
             $table->string('country', 200)->nullable();
             $table->timestamps();
         });

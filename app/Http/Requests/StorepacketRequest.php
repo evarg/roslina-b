@@ -27,8 +27,10 @@ class StorePacketRequest extends FormRequest
         return [
             'name' => 'required|min:2|max:200',
             'producer_id' => [
-                'integer', 'exists:producers,id'
+                'integer', 'exists:producers,id',
             ],
+            'expiration_date' => 'nullable|date_format:Y.m.d',
+            'purchase_date' => 'nullable|date_format:Y.m.d',
         ];
     }
 }

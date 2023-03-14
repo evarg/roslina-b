@@ -40,6 +40,7 @@ class ProducerController extends Controller
      */
     public function show(Producer $producer)
     {
+        $producer->packets = $producer->packets;
         return new JsonResponse($producer, 200);
     }
 
@@ -64,6 +65,10 @@ class ProducerController extends Controller
      */
     public function destroy(Producer $producer)
     {
+        foreach($producer->packets as $packet){
+            $packet->delete();
+        }
+
         $producer->delete();
         return new JsonResponse(null, 201);
     }

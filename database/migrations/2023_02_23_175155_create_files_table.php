@@ -15,13 +15,13 @@ return new class extends Migration
     {
         Schema::create('files', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('name');
+            $table->string('desc')->nullable();
             $table->string('org_name');
             $table->string('file_name');
-            $table->string('desc');
             $table->string('mime');
             $table->bigInteger('size');
+            $table->timestamps();
         });
     }
 

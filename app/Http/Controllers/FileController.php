@@ -29,13 +29,11 @@ class FileController extends Controller
      */
     public function store(StoreFileRequest $request)
     {
-        $path = $request->file('image')->store('public');
-        return new JsonResponse($path, 201);
-
         $file = new File($request->all());
         $file->file_name = $request->file('image')->store('images');
         $file->org_name = $request->file('image')->getClientOriginalName();
         $file->size = $request->file('image')->getSize();
+        $file->mime = $request->file('image')->getMimeType();
         $file->save();
         return new JsonResponse($file, 201);
     }
