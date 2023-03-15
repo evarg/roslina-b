@@ -30,7 +30,7 @@ class FileController extends Controller
     public function store(StoreFileRequest $request)
     {
         $file = new File($request->all());
-        $file->file_name = $request->file('image')->store('images');
+        $file->file_name = $request->file('image')->store('public/images');
         $file->org_name = $request->file('image')->getClientOriginalName();
         $file->size = $request->file('image')->getSize();
         $file->mime = $request->file('image')->getMimeType();

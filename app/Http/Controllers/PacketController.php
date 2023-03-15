@@ -92,8 +92,8 @@ class PacketController extends Controller
         $packet = Packet::findOrFail($id);
 
         $file = new File($request->all());
-        $file->name = $request->file('image')->getFilename();
-        $file->file_name = $request->file('image')->store('images');
+        $file->name = $request->file('image')->getClientOriginalName();
+        $file->file_name = $request->file('image')->store('public/images');
         $file->org_name = $request->file('image')->getClientOriginalName();
         $file->size = $request->file('image')->getSize();
         $file->mime = $request->file('image')->getMimeType();
