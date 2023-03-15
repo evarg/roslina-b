@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorepacketRequest;
 use App\Http\Requests\UpdatepacketRequest;
+use App\Http\Requests\UploadFileToPacketRequest;
+
 use App\Models\Packet;
 use App\Models\File;
 use Illuminate\Http\JsonResponse;
@@ -44,6 +46,7 @@ class PacketController extends Controller
     public function show(packet $packet)
     {
         $packet->producer = $packet->producer;
+        $packet->files = $packet->files;
         return new JsonResponse($packet, 200);
     }
 
@@ -84,6 +87,23 @@ class PacketController extends Controller
         return new JsonResponse($packet, 201);
     }
 
+    public function addFileUpload(UploadFileToPacketRequest $request, int $id)
+    {
+        $packet = Packet::findOrFail($id);
+
+        $file = new File($request->all());
+        $file->name = $request->file('image')->getFilename();
+        $file->file_name = $request->file('image')->store('images');
+        $file->org_name = $request->file('image')->getClientOriginalName();
+        $file->size = $request->file('image')->getSize();
+        $file->mime = $request->file('image')->getMimeType();
+        $file->save();
+
+        $packet->files()->attach($file);
+
+        return new JsonResponse($request->all(), 201);
+    }
+
     public function removeFile(string $id, string $fileID)
     {
         $packet = Packet::findOrFail($id);
@@ -94,6 +114,4 @@ class PacketController extends Controller
 
         return new JsonResponse($packet, 201);
     }
-
-
 }
