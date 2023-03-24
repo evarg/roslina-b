@@ -7,7 +7,9 @@ use App\Http\Controllers\UploadController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
 
-use App\Models\Packet;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +43,34 @@ Route::get('status', [App\Http\Controllers\AuthController::class, 'status']);
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
-Route::post('register', [RegisterController::class, 'register']);
-// Route::post('refresh', 'AuthController@refresh');
 Route::post('me', [AuthController::class, 'me']);
+
+Route::post('register', [RegisterController::class, 'register']);
+Route::get('/email/verify', [RegisterController::class, 'show']);
+Route::get('/email/verify/{id}/{hash}', [RegisterController::class, 'verify']);
+Route::post('/email/resend', [RegisterController::class, 'resend']);
+
+// Route::post('refresh', 'AuthController@refresh');
+
+Route::get('/email/verify/{id}', [RegisterController::class, 'verify'])
+    ->name('email.verify')
+    ->middleware('signed');
+
+
+Route::get('mail', function () {
+
+    $to_name = 'Bartosz Grabski';
+    $to_email = 'grave432@gmail.com';
+    $data = array('name' => "Sam Jose", "body" => "Test mail");
+
+    Mail::send('welcome', $data, function ($message) use ($to_name, $to_email) {
+        $message->to($to_email, $to_name)
+            ->subject('Artisans Web Testing Mail');
+        $message->from('rejestracja@roslina.com.pl', 'Artisans Web');
+    });
+
+    //Config::get('mail.from.name');
+
+    return config('mail');;
+    return env('MAIL_ENCRYPTION', 'tls');
+});
