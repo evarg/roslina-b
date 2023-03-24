@@ -47,6 +47,20 @@ class PacketController extends Controller
     {
         $packet->producer = $packet->producer;
         $packet->files = $packet->files;
+        return new JsonResponse($packet, JsonResponse::HTTP_OK);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\packet  $packet
+     * @return \Illuminate\Http\Response
+     */
+    public function show2(int $packetID)
+    {
+        $packet = Packet::findOrFail($packetID);
+        $packet->producer = $packet->producer;
+        $packet->files = $packet->files;
         return new JsonResponse($packet, 200);
     }
 
@@ -100,8 +114,9 @@ class PacketController extends Controller
         $file->save();
 
         $packet->files()->attach($file);
-
-        return new JsonResponse($request->all(), 201);
+        $packet->save();
+        $packet->files = $packet->files;
+        return new JsonResponse($packet, 201);
     }
 
     public function removeFile(string $id, string $fileID)

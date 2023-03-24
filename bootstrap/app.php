@@ -26,6 +26,8 @@ $app = new Illuminate\Foundation\Application(
 |
 */
 
+//$app->configure('jwt');
+
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
     App\Http\Kernel::class

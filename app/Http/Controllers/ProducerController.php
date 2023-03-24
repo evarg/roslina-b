@@ -6,6 +6,7 @@ use App\Models\Producer;
 use App\Http\Requests\StoreProducerRequest;
 use App\Http\Requests\UpdateProducerRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class ProducerController extends Controller
 {
@@ -38,9 +39,10 @@ class ProducerController extends Controller
      * @param  \App\Models\Producer  $producer
      * @return \Illuminate\Http\Response
      */
-    public function show(Producer $producer)
+    public function show(Producer $producer, Request $request)
     {
         $producer->packets = $producer->packets;
+        $producer->current_user = auth()->user();
         return new JsonResponse($producer, 200);
     }
 

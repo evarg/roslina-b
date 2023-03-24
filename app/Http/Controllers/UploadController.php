@@ -51,7 +51,7 @@ class UploadController extends Controller
     {
         $filename = base64_decode($request->filename_source);
         if (!Storage::disk('public')->exists($filename)) {
-            return new JsonResponse('Brak pliku: ' . $filename, 404);
+            return new JsonResponse('Brak pliku: ' . $filename, 404 );
         }
 
         $mime_type = Storage::disk('public')->mimeType($filename);
