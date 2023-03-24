@@ -48,7 +48,10 @@ Route::post('me', [AuthController::class, 'me']);
 Route::post('register', [RegisterController::class, 'register']);
 Route::get('/email/verify', [RegisterController::class, 'show']);
 Route::get('/email/verify/{id}/{hash}', [RegisterController::class, 'verify']);
-Route::post('/email/resend', [RegisterController::class, 'resend']);
+//Route::post('/email/resend', [RegisterController::class, 'resend']);
+Route::post('/reset_password', [RegisterController::class, 'resetPassword']);
+Route::get('/reset_password', [RegisterController::class, 'resetPassword'])->name('password.reset');
+
 
 // Route::post('refresh', 'AuthController@refresh');
 
