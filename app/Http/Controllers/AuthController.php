@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\ResetPassword;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
@@ -86,4 +88,22 @@ class AuthController extends Controller
             //'expires_in' => auth()-> ->factory()->getTTL() * 60
         ]);
     }
+
+
+    public function reset(ResetPassword $request)
+    {
+        $credentials = array_merge($request->only('email', 'password',
+            'password_confirmation', 'token'), ['deleted' => 0, 'activated' => 1]);
+
+        // try to change user password
+        $response = Password::broker()
+            ->reset($credentials, function ($user, $password) {
+                $user->password = $password;
+                $user->save();
+            });
+
+        // return valid response based on Password broker response
+        return $response;
+    }
+
 }

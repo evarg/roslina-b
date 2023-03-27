@@ -10,11 +10,9 @@ use Illuminate\Support\Facades\Mail;
 
 use App\Mail\RegistrationMail;
 
-use App\Mail\SendDemoMail;
 use Illuminate\Support\Facades\URL;
-use App\Http\Requests\ResetPasswordRequest;
-use App\Mail\ForgotParswordMail;
-use Illuminate\Auth\Notifications\ResetPassword;
+use App\Http\Requests\ResetRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Password;
 
 class RegisterController extends Controller
@@ -28,11 +26,9 @@ class RegisterController extends Controller
      */
     public function register(RegisterRequest $request)
     {
-        //        $email = 'grave432@gmail.com';
         $credencials = $request->validated();
         $credencials['password'] = Hash::make($credencials['password']);
 
-        //$user = User::findOrFail(26);
         $user = User::create($credencials);
         $maildata = [
             'subject' => 'Aktywacja konta użytkownika w systemie roslina.com.pl',
@@ -42,14 +38,6 @@ class RegisterController extends Controller
 
         Mail::to($user->email)->send(new RegistrationMail($maildata));
         return $user;
-
-        //auth()->login($user);
-
-        //Mail::to($user->email)->send(new VerificationEmail($user));
-        //Mail::to($user->email)->send(new VerificationEmail($user));
-
-        //return URL::signedRoute('packets.show', ['packet' => 24]);
-        //return $user;
     }
 
     public function verify(Request $request)
@@ -62,32 +50,41 @@ class RegisterController extends Controller
         }
     }
 
-    public function resetPassword(ResetPasswordRequest $request)
+    public function resetPassword(Request $request)
     {
-        $credencials = $request->validated();
-
-        //$user = User::findOrFail(26);
-        //$user = User::create($credencials);
-
-        $status = Password::sendResetLink(
-            $request->only('email')
+        $response = Password::broker()->sendResetLink(
+            array_merge($request->only('email'))
         );
 
-        $user = User::where('email', $request->email)->first();
-        //$user->generatePasswordResetToken();
-        $maildata = [
-            'subject' => 'Reset hasła konta użytkownika w systemie roslina.com.pl',
-            'userName' => $user->name,
-            'url' => $status
-        ];
+        switch ($response) {
+            case Password::RESET_LINK_SENT:
+                return new JsonResponse('responseOk', 201);
+            default:
+                return new JsonResponse('UNKNOWN ERROR', 422);
+        }
+    }
 
-        $hw = ResetPassword::createUrlUsing(function (User $user, string $token) {
-            return 'https://example.com/reset-password?token='.$token;
-        });
+    public function reset(ResetRequest $request)
+    {
+        $credentials = array_merge($request->only(
+            'email',
+            'password',
+            'password_confirmation',
+            'token'
+        ));
 
-        //Mail::to($user->email)->send(new ForgotParswordMail($maildata));
-        return Password::broker()->createToken($user);;
+        $response = Password::broker()
+            ->reset($credentials, function ($user, $password) {
+                $user->password = Hash::make($password);
+                $user->password = $password;
+                $user->save();
+            });
 
-
+        switch ($response) {
+            case Password::PASSWORD_RESET:
+                return new JsonResponse('responseOk', 201);
+            default:
+                return new JsonResponse('UNKNOWN ERROR', 422);
+        }
     }
 }
