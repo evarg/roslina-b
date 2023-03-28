@@ -76,7 +76,7 @@ class RegisterController extends Controller
         $response = Password::broker()
             ->reset($credentials, function ($user, $password) {
                 $user->password = Hash::make($password);
-                $user->password = $password;
+                //$user->password = $password;
                 $user->save();
             });
 
