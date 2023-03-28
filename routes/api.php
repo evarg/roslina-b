@@ -60,20 +60,8 @@ Route::get('/email/verify/{id}', [RegisterController::class, 'verify'])
     ->middleware('signed');
 
 
-Route::get('mail', function () {
+Route::get('testuncio', function () {
+    $cos = "Asdf";
 
-    $to_name = 'Bartosz Grabski';
-    $to_email = 'grave432@gmail.com';
-    $data = array('name' => "Sam Jose", "body" => "Test mail");
-
-    Mail::send('welcome', $data, function ($message) use ($to_name, $to_email) {
-        $message->to($to_email, $to_name)
-            ->subject('Artisans Web Testing Mail');
-        $message->from('rejestracja@roslina.com.pl', 'Artisans Web');
-    });
-
-    //Config::get('mail.from.name');
-
-    return config('mail');;
-    return env('MAIL_ENCRYPTION', 'tls');
+    return $cos;
 });
