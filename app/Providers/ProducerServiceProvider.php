@@ -4,19 +4,24 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-class AppServiceProvider extends ServiceProvider
+use App\Services\Dupa;
+
+class ProducerServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Register services.
      *
      * @return void
      */
     public function register()
     {
+        // $this->app->bind(Dupa::class, function($app){
+        //     return new Dupa();
+        // });
     }
 
     /**
-     * Bootstrap any application services.
+     * Bootstrap services.
      *
      * @return void
      */

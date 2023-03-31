@@ -1,0 +1,90 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: roslina
+  license:
+    name: hw v0.1
+servers:
+  - url: http://roslina_b.poligon/api
+paths:
+  /pets:
+    post:
+      summary: Create a user
+      operationId: createPets
+      tags:
+        - pets
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: users name
+          schema:
+            type: string
+        - name: email
+          in: path
+          required: true
+          description: users email
+          schema:
+            type: string
+        - name: password
+          in: path
+          required: true
+          description: users password
+          schema:
+            type: string
+        - name: password_confirmation
+          in: path
+          required: true
+          description: users password confirmation
+          schema:
+            type: string
+
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - password
+        - password_confirmation
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        email:
+          type: string
+        tag:
+          type: string
+        password:
+          type: string
+        password_confirmation:
+          type: string
+    Pets:
+      type: array
+      maxItems: 100
+      items:
+        $ref: "#/components/schemas/User"
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

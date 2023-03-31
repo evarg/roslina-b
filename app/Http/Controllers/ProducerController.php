@@ -41,8 +41,7 @@ class ProducerController extends Controller
      */
     public function show(Producer $producer, Request $request)
     {
-        $producer->packets = $producer->packets;
-        $producer->current_user = auth()->user();
+//        $producer->packets = $producer->packets;
         return new JsonResponse($producer, 200);
     }
 

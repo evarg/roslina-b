@@ -6,12 +6,21 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
-
+use App\Http\Controllers\ImageController;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Includes refactor
+|--------------------------------------------------------------------------
+*/
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,6 +48,8 @@ Route::apiResource('producers', ProducerController::class);
 Route::apiResource('files', FileController::class);
 Route::apiResource('upload', UploadController::class);
 
+Route::apiResource('images', ImageController::class);
+
 Route::get('status', [App\Http\Controllers\AuthController::class, 'status']);
 
 Route::post('login', [AuthController::class, 'login']);
@@ -52,6 +63,10 @@ Route::get('/email/verify/{id}/{hash}', [RegisterController::class, 'verify']);
 Route::post('/reset_password', [RegisterController::class, 'reset']);
 Route::get('/reset_password', [RegisterController::class, 'resetPassword'])->name('password.reset');
 
+Route::model('producer', 'App\Models\Producer');
+Route::model('packet', 'App\Models\Packet');
+Route::get('/test/{producer}/{packet}', [UserController::class, 'test']);
+
 
 // Route::post('refresh', 'AuthController@refresh');
 
@@ -61,7 +76,20 @@ Route::get('/email/verify/{id}', [RegisterController::class, 'verify'])
 
 
 Route::get('testuncio', function () {
-    $cos = "Asdf";
+    $c1 = Hash::make('dduuuppaa');
+    $c2 = Hash::check('dduuuppaa', $c1);
+    $c3 = Hash::check('dduuuppaa', $c1);
 
-    return $cos;
+    return $c1 . ' - ' . $c2 . ' - ' . $c3;
 });
+
+
+/*
+|--------------------------------------------------------------------------
+| API Routes - Refactor
+|--------------------------------------------------------------------------
+|
+*/
+
+Route::post('users', [UserController::class, 'store']);
+Route::put('users/{user}', [UserController::class, 'update']);
