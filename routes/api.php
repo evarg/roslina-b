@@ -6,6 +6,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ImageController;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -47,6 +48,8 @@ Route::apiResource('producers', ProducerController::class);
 Route::apiResource('files', FileController::class);
 Route::apiResource('upload', UploadController::class);
 
+Route::apiResource('images', ImageController::class);
+
 Route::get('status', [App\Http\Controllers\AuthController::class, 'status']);
 
 Route::post('login', [AuthController::class, 'login']);
@@ -59,6 +62,10 @@ Route::get('/email/verify/{id}/{hash}', [RegisterController::class, 'verify']);
 //Route::post('/email/resend', [RegisterController::class, 'resend']);
 Route::post('/reset_password', [RegisterController::class, 'reset']);
 Route::get('/reset_password', [RegisterController::class, 'resetPassword'])->name('password.reset');
+
+Route::model('producer', 'App\Models\Producer');
+Route::model('packet', 'App\Models\Packet');
+Route::get('/test/{producer}/{packet}', [UserController::class, 'test']);
 
 
 // Route::post('refresh', 'AuthController@refresh');
@@ -85,3 +92,4 @@ Route::get('testuncio', function () {
 */
 
 Route::post('users', [UserController::class, 'store']);
+Route::put('users/{user}', [UserController::class, 'update']);

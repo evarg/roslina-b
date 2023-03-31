@@ -71,5 +71,4 @@ class UserController extends TestCase
         $this->assertEquals(Hash::check($user['password'], $dbUser['password']), true);
     }
 
-
 }
