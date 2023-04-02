@@ -37,26 +37,29 @@ class PacketController extends Controller
         $packet->save();
         $packet = Packet::with('producer')->find($packet->id);
 
-        $file = new File($request->all());
-        $file->file_name = $request->file('image_front')->store('public/images');
-        $file->org_name = $request->file('image_front')->getClientOriginalName();
-        $file->size = $request->file('image_front')->getSize();
-        $file->mime = $request->file('image_front')->getMimeType();
-        $file->save();
-        $packet->files()->attach($file);
-        $packet->save();
+        if ($request->file('image_front')) {
+            $file = new File($request->all());
+            $file->file_name = $request->file('image_front')->store('public/images');
+            $file->org_name = $request->file('image_front')->getClientOriginalName();
+            $file->size = $request->file('image_front')->getSize();
+            $file->mime = $request->file('image_front')->getMimeType();
+            $file->save();
+            $packet->files()->attach($file);
+            $packet->save();
+        }
 
-        $file = new File($request->all());
-        $file->file_name = $request->file('image_back')->store('public/images');
-        $file->org_name = $request->file('image_back')->getClientOriginalName();
-        $file->size = $request->file('image_back')->getSize();
-        $file->mime = $request->file('image_back')->getMimeType();
-        $file->save();
-        $packet->files()->attach($file);
-        $packet->save();
+        if ($request->file('image_back')) {
+            $file = new File($request->all());
+            $file->file_name = $request->file('image_back')->store('public/images');
+            $file->org_name = $request->file('image_back')->getClientOriginalName();
+            $file->size = $request->file('image_back')->getSize();
+            $file->mime = $request->file('image_back')->getMimeType();
+            $file->save();
+            $packet->files()->attach($file);
+            $packet->save();
+        }
 
         return new JsonResponse($packet, 201);
-
     }
 
     /**

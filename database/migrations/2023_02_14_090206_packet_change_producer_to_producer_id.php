@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::table('packets', function (Blueprint $table) {
             $table->dropColumn('producer');
-            $table->integer('producer_id')->after('name_latin')->nullable()->default('0');
+            $table->integer('producer_id')->after('name_latin')->nullable();
         });
     }
 
