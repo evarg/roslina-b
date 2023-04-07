@@ -14,8 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('packets', function (Blueprint $table) {
-            $table->dropColumn('producer');
-            $table->integer('producer_id')->after('name_latin')->nullable();
+            $table->integer('back_id')->after('purchase_date')->nullable();
+            $table->integer('front_id')->after('purchase_date')->nullable();
         });
     }
 
@@ -27,8 +27,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('packets', function (Blueprint $table) {
-            $table->string('producer', 100)->after('name_latin')->nullable();
-            $table->dropColumn('producer_id');
+            $table->dropColumn('back_id');
+            $table->dropColumn('front_id');
         });
     }
 };
