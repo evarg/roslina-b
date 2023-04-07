@@ -29,4 +29,16 @@ class Packet extends Model
     {
         return $this->belongsToMany(File::class);
     }
+
+    public function front()
+    {
+        return $this->belongsTo(File::class);
+    }
+
+    public function back()
+    {
+        return $this->belongsTo(File::class);
+    }
+
+
 }
