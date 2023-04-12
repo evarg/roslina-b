@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Producer;
 use App\Http\Requests\StoreProducerRequest;
 use App\Http\Requests\UpdateProducerRequest;
+use App\Models\Packet;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -39,7 +40,7 @@ class ProducerController extends Controller
      * @param  \App\Models\Producer  $producer
      * @return \Illuminate\Http\Response
      */
-    public function show(Producer $producer, Request $request)
+    public function show(Packet $producer, Request $request)
     {
 //        $producer->packets = $producer->packets;
         return new JsonResponse($producer, 200);

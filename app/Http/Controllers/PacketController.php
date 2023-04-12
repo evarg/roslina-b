@@ -19,7 +19,7 @@ class PacketController extends Controller
      */
     public function index()
     {
-//        $packetList =
+        //        $packetList =
         return new JsonResponse(Packet::with(['producer', 'front', 'back'])->get(), 200);
     }
 
@@ -31,11 +31,7 @@ class PacketController extends Controller
      */
     public function store(StorepacketRequest $request)
     {
-        //var_dump($request->all());
-
         $packet = new Packet($request->all());
-        $packet->save();
-        $packet = Packet::with('producer')->find($packet->id);
 
         if ($request->file('image_front')) {
             $file = new File($request->all());
@@ -44,9 +40,8 @@ class PacketController extends Controller
             $file->size = $request->file('image_front')->getSize();
             $file->mime = $request->file('image_front')->getMimeType();
             $file->save();
-            //$packet->image_front = $file;
-            $packet->front_id = $file->id;
-            $packet->save();
+
+            $packet->front()->associate($file);
         }
 
         if ($request->file('image_back')) {
@@ -56,14 +51,12 @@ class PacketController extends Controller
             $file->size = $request->file('image_back')->getSize();
             $file->mime = $request->file('image_back')->getMimeType();
             $file->save();
-            $packet->back_id = $file->id;
-            //$packet->back()->save($file);
-            $packet->save();
+
+            $packet->back()->associate($file);
         }
 
-        $packet = Packet::with(['producer', 'front', 'back'])->find($packet->id);
+        $packet->save();
 
-        //var_dump($packet->image_back());
         return new JsonResponse($packet, 201);
     }
 
@@ -75,28 +68,8 @@ class PacketController extends Controller
      */
     public function show(packet $packet)
     {
-        $packet = Packet::with(['producer', 'front', 'back'])->find($packet->id);
-
-        //$packet->producer = $packet->producer;
-        //$packet->files = $packet->files;
-
-        $packet->with(['producer']);
-
+        $packet->load(['producer', 'front', 'back']);
         return new JsonResponse($packet, JsonResponse::HTTP_OK);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\packet  $packet
-     * @return \Illuminate\Http\Response
-     */
-    public function show2(int $packetID)
-    {
-        $packet = Packet::findOrFail($packetID);
-        $packet->producer = $packet->producer;
-        $packet->files = $packet->files;
-        return new JsonResponse($packet, 200);
     }
 
     /**
