@@ -73,12 +73,9 @@ class UserController extends Controller
     }
 
 
-    public function test(Dupa2 $r, Producer $pr, Packet $pa, Request $rr)
+    public function show(Request $request, User $user)
     {
-        $qq = var_dump($pr);
-        $qq .= '<hr>';
-        $qq .= var_dump($pa);
-        //return $qq;
-        //return $id2 . " " . $r->get();
+        $user->load(['packets']);
+        return new JsonResponse($user, JsonResponse::HTTP_OK);
     }
 }

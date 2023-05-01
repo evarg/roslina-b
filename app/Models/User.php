@@ -53,8 +53,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-
-
     // Rest omitted for brevity
 
     /**
@@ -76,4 +74,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return [];
     }
+
+    public function packets()
+    {
+        return $this->hasMany(Packet::class, 'owner_id');
+    }
+
 }
