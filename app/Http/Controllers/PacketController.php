@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+Use Illuminate\Support\Facades\Auth;
+
 use App\Http\Requests\StorepacketRequest;
 use App\Http\Requests\UpdatepacketRequest;
 use App\Http\Requests\UploadFileToPacketRequest;
@@ -19,8 +21,8 @@ class PacketController extends Controller
      */
     public function index()
     {
-        //        $packetList =
-        return new JsonResponse(Packet::with(['producer', 'front', 'back'])->get(), 200);
+        $packetList = Packet::with(['producer', 'front', 'back'])->get();
+        return new JsonResponse($packetList, 200);
     }
 
     /**
@@ -34,7 +36,7 @@ class PacketController extends Controller
         $packet = new Packet($request->all());
 
         if ($request->file('image_front')) {
-            $file = new File($request->all());
+            $file = new File(['name' => $packet->name . ' - Front']);
             $file->file_name = str_replace('public/', '', $request->file('image_front')->store('public/images'));
             $file->org_name = $request->file('image_front')->getClientOriginalName();
             $file->size = $request->file('image_front')->getSize();
@@ -45,7 +47,7 @@ class PacketController extends Controller
         }
 
         if ($request->file('image_back')) {
-            $file = new File($request->all());
+            $file = new File(['name' => $packet->name . ' - Back']);
             $file->file_name = str_replace('public/', '', $request->file('image_back')->store('public/images'));
             $file->org_name = $request->file('image_back')->getClientOriginalName();
             $file->size = $request->file('image_back')->getSize();
@@ -54,6 +56,9 @@ class PacketController extends Controller
 
             $packet->back()->associate($file);
         }
+
+        $user = Auth::user();
+        $packet->owner()->associate($user);
 
         $packet->save();
 

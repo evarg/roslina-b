@@ -93,3 +93,5 @@ Route::get('testuncio', function () {
 
 Route::post('users', [UserController::class, 'store']);
 Route::put('users/{user}', [UserController::class, 'update']);
+
+Route::get('users/{user}', [UserController::class, 'show']);

@@ -40,5 +40,10 @@ class Packet extends Model
         return $this->belongsTo(File::class);
     }
 
+    public function owner()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 
 }
