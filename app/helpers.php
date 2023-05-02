@@ -25,4 +25,3 @@ const PACKET_JSON_RESPONSE =
     "producer" => PRODUCER_JSON_RESPONSE
 
 ];
-

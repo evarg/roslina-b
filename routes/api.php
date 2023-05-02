@@ -52,9 +52,9 @@ Route::apiResource('images', ImageController::class);
 
 Route::get('status', [App\Http\Controllers\AuthController::class, 'status']);
 
-Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout']);
-Route::post('me', [AuthController::class, 'me']);
+Route::post('auth', [AuthController::class, 'store']);
+Route::delete('auth', [AuthController::class, 'destroy']);
+Route::get('auth', [AuthController::class, 'show']);
 
 Route::post('register', [RegisterController::class, 'register']);
 Route::get('/email/verify', [RegisterController::class, 'show']);

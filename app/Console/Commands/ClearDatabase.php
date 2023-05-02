@@ -3,11 +3,9 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-
 use App\Models\User;
 use App\Models\Packet;
 use App\Models\Producer;
-
 
 class ClearDatabase extends Command
 {

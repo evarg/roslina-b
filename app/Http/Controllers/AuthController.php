@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ApiResponse;
+use App\Helpers\ErrorCode;
+use App\Helpers\MessageCode;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use App\Http\Requests\ResetPassword;
 use Illuminate\Support\Facades\Password;
+use App\Http\Requests\StoreAuthRequest;
+use App\Models\User;
 
 class AuthController extends Controller
 {
@@ -18,28 +22,36 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
-    }
-
-    public function status()
-    {
-        return new JsonResponse(Auth::user(), 200);
+        $this->middleware('auth:api', ['except' => ['store']]);
     }
 
     /**
-     * Get a JWT via given credentials.
+     * Log in user.
+     *
+     * @param StoreAuthRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function store(StoreAuthRequest $request)
     {
-        $credentials = request(['email', 'password']);
+        $credencials = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
 
-        if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!Auth::attempt($credencials)) {
+            return ApiResponse::error(ErrorCode::AUTH_INVALID_CREDENCIALS, 401);
         }
 
-        return $this->respondWithToken($token);
+        $user = User::where('email', $request->email)->first();
+
+        return new JsonResponse(
+            [
+            'user' => $user,
+            'token' => $user->createToken('Angular.token')->plainTextToken,
+            ],
+            201
+        );
     }
 
     /**
@@ -47,7 +59,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function me()
+    public function show()
     {
         return response()->json(auth()->user());
     }
@@ -57,10 +69,10 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function destroy()
     {
         auth()->logout();
-        return response()->json(['message' => 'Successfully logged out']);
+        return new JsonResponse(['message' => MessageCode::AUTH_LOGOUT_SUCCESS], 200);
     }
 
     /**
@@ -76,34 +88,45 @@ class AuthController extends Controller
     /**
      * Get the token array structure.
      *
-     * @param  string $token
+     * @param string $token
      *
      * @return \Illuminate\Http\JsonResponse
      */
     protected function respondWithToken($token)
     {
-        return response()->json([
+        return response()->json(
+            [
             'access_token' => $token,
             'token_type' => 'bearer',
             //'expires_in' => auth()-> ->factory()->getTTL() * 60
-        ]);
+            ]
+        );
     }
 
 
     public function reset(ResetPassword $request)
     {
-        $credentials = array_merge($request->only('email', 'password',
-            'password_confirmation', 'token'), ['deleted' => 0, 'activated' => 1]);
+        $credentials = array_merge(
+            $request->only(
+                'email',
+                'password',
+                'password_confirmation',
+                'token'
+            ),
+            ['deleted' => 0, 'activated' => 1]
+        );
 
         // try to change user password
         $response = Password::broker()
-            ->reset($credentials, function ($user, $password) {
-                $user->password = $password;
-                $user->save();
-            });
+            ->reset(
+                $credentials,
+                function ($user, $password) {
+                    $user->password = $password;
+                    $user->save();
+                }
+            );
 
         // return valid response based on Password broker response
         return $response;
     }
-
 }

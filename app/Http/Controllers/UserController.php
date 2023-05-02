@@ -40,9 +40,12 @@ class UserController extends Controller
         ];
 
         Mail::to($user->email)->send(new RegistrationMail($maildata));
-        return new JsonResponse([
+        return new JsonResponse(
+            [
             'user' => $user
-        ], 201);
+            ],
+            201
+        );
     }
 
     public function update(UpdateUserRequest $request, User $user)
@@ -53,15 +56,19 @@ class UserController extends Controller
                 'password' => $request->input('old_password'),
             ];
 
-            if (!auth()->validate($credentials))
-                return new JsonResponse([
+            if (!auth()->validate($credentials)) {
+                return new JsonResponse(
+                    [
                     "message" => "The old password is not valid.",
                     "errors" => [
                         "old_password" => [
                             "The old password field is not valid."
                         ]
                     ]
-                ], 422);
+                    ],
+                    422
+                );
+            }
 
             $user['password'] = Hash::make(request('password'));
         }

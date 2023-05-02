@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
-
 use App\Models\File;
 use App\Http\Requests\StoreUploadRequest;
 
@@ -21,37 +20,46 @@ class UploadController extends Controller
      */
     public function index()
     {
-        $files = array_map(function ($filename) {
-            return [
+        $files = array_map(
+            function ($filename) {
+                return [
                 'name' => $filename,
                 'name_encode' => base64_encode($filename)
-            ];
-        }, Storage::disk('public')->files($this->directory_source));
+                ];
+            },
+            Storage::disk('public')->files($this->directory_source)
+        );
 
-        $directories = array_map(function ($directoryname) {
-            return [
+        $directories = array_map(
+            function ($directoryname) {
+                return [
                 'name' => $directoryname,
                 'name_encode' => base64_encode($directoryname)
-            ];
-        }, Storage::disk('public')->directories($this->directory_source));
+                ];
+            },
+            Storage::disk('public')->directories($this->directory_source)
+        );
 
-        return new JsonResponse([
+        return new JsonResponse(
+            [
             'directories' => $directories,
             'files' => $files
-        ], 200);
+            ],
+            200
+        );
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreUploadRequest $request)
     {
         $filename = base64_decode($request->filename_source);
         if (!Storage::disk('public')->exists($filename)) {
-            return new JsonResponse('Brak pliku: ' . $filename, 404 );
+            return new JsonResponse('Brak pliku: ' . $filename, 404);
         }
 
         $mime_type = Storage::disk('public')->mimeType($filename);
@@ -75,7 +83,7 @@ class UploadController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function show($encoded_filename)
@@ -97,7 +105,7 @@ class UploadController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($encoded_filename)

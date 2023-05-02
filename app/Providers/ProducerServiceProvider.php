@@ -4,8 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Services\Dupa;
-
 class ProducerServiceProvider extends ServiceProvider
 {
     /**

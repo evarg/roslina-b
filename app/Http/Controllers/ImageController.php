@@ -25,7 +25,7 @@ class ImageController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StoreimageRequest  $request
+     * @param  \App\Http\Requests\StoreimageRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StoreimageRequest $request)
@@ -50,7 +50,7 @@ class ImageController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\image  $image
+     * @param  \App\Models\image $image
      * @return \Illuminate\Http\Response
      */
     public function show(image $image)
@@ -61,7 +61,7 @@ class ImageController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\image  $image
+     * @param  \App\Models\image $image
      * @return \Illuminate\Http\Response
      */
     public function edit(image $image)
@@ -72,8 +72,8 @@ class ImageController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdateimageRequest  $request
-     * @param  \App\Models\image  $image
+     * @param  \App\Http\Requests\UpdateimageRequest $request
+     * @param  \App\Models\image                     $image
      * @return \Illuminate\Http\Response
      */
     public function update(UpdateimageRequest $request, image $image)
@@ -84,7 +84,7 @@ class ImageController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\image  $image
+     * @param  \App\Models\image $image
      * @return \Illuminate\Http\Response
      */
     public function destroy(image $image)

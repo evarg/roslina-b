@@ -11,7 +11,8 @@ use Illuminate\Queue\SerializesModels;
 
 class RegistrationMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public $url;
     public $subject;
