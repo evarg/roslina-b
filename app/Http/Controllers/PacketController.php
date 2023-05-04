@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers;
 
-Use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StorepacketRequest;
 use App\Http\Requests\UpdatepacketRequest;
 use App\Http\Requests\UploadFileToPacketRequest;
-
 use App\Models\Packet;
 use App\Models\File;
 use Illuminate\Http\JsonResponse;
@@ -28,7 +26,7 @@ class PacketController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\StorepacketRequest  $request
+     * @param  \App\Http\Requests\StorepacketRequest $request
      * @return \Illuminate\Http\Response
      */
     public function store(StorepacketRequest $request)
@@ -68,7 +66,7 @@ class PacketController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\packet  $packet
+     * @param  \App\Models\packet $packet
      * @return \Illuminate\Http\Response
      */
     public function show(packet $packet)
@@ -80,13 +78,14 @@ class PacketController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \App\Http\Requests\UpdatepacketRequest  $request
-     * @param  \App\Models\packet  $packet
+     * @param  \App\Http\Requests\UpdatepacketRequest $request
+     * @param  \App\Models\packet                     $packet
      * @return \Illuminate\Http\Response
      */
     public function update(UpdatepacketRequest $request, packet $packet)
     {
-        $packet->update($request->all());;
+        $packet->update($request->all());
+        ;
         //$packet->producer = $packet->producer;
         return new JsonResponse($packet, 201);
     }
@@ -94,7 +93,7 @@ class PacketController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\packet  $packet
+     * @param  \App\Models\packet $packet
      * @return \Illuminate\Http\Response
      */
     public function destroy(packet $packet)

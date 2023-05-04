@@ -27,8 +27,8 @@ return new class extends Migration
     public function down()
     {
         Schema::table('packets', function (Blueprint $table) {
-            $table->dropColumn('back_id');
-            $table->dropColumn('front_id');
+            $table->dropColumn(['back_id', 'front_id']);
+//            $table->dropColumn('front_id');
         });
     }
 };

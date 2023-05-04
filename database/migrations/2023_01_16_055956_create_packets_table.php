@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('desc')->nullable();
             $table->string('name_polish', 200)->nullable();
             $table->string('name_latin', 200)->nullable();
-            $table->string('producer', 100)->nullable();
+            $table->integer('producer_id')->nullable();
             $table->date('expiration_date')->nullable();
             $table->date('purchase_date')->nullable();
             $table->timestamps();

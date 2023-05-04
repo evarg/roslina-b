@@ -26,7 +26,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('packets', function (Blueprint $table) {
-            //
+            $table->dropColumn('owner_id');
         });
     }
 };

@@ -7,9 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use Hash;
 use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\Mail;
-
 use App\Mail\RegistrationMail;
-
 use Illuminate\Support\Facades\URL;
 use App\Http\Requests\ResetRequest;
 use Illuminate\Http\JsonResponse;
@@ -44,9 +42,11 @@ class RegisterController extends Controller
     {
         $user = User::findOrFail($request->route('id'));
         if ($user->markEmailAsVerified()) {
-            return response()->json([
+            return response()->json(
+                [
                 'message' => 'Email verified'
-            ]);
+                ]
+            );
         }
     }
 
@@ -66,19 +66,24 @@ class RegisterController extends Controller
 
     public function reset(ResetRequest $request)
     {
-        $credentials = array_merge($request->only(
-            'email',
-            'password',
-            'password_confirmation',
-            'token'
-        ));
+        $credentials = array_merge(
+            $request->only(
+                'email',
+                'password',
+                'password_confirmation',
+                'token'
+            )
+        );
 
         $response = Password::broker()
-            ->reset($credentials, function ($user, $password) {
-                $user->password = Hash::make($password);
-                //$user->password = $password;
-                $user->save();
-            });
+            ->reset(
+                $credentials,
+                function ($user, $password) {
+                    $user->password = Hash::make($password);
+                    //$user->password = $password;
+                    $user->save();
+                }
+            );
 
         switch ($response) {
             case Password::PASSWORD_RESET:

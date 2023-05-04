@@ -2,44 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use App\Http\Requests\ResetPassword;
-use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Auth;
+use App\Helpers\ApiResponse;
+use App\Helpers\ErrorCode;
+use App\Helpers\MessageCode;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAuthRequest;
+use App\Models\User;
 
 class AuthController extends Controller
 {
     /**
-     * Create a new AuthController instance.
+     * Log in user.
      *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['login']]);
-    }
-
-    public function status()
-    {
-        return new JsonResponse(Auth::user(), 200);
-    }
-
-    /**
-     * Get a JWT via given credentials.
+     * @param StoreAuthRequest $request
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login()
+    public function store(StoreAuthRequest $request)
     {
-        $credentials = request(['email', 'password']);
+        $credencials = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
 
-        if (!$token = auth()->attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+        if (!Auth::attempt($credencials)) {
+            return ApiResponse::error(ErrorCode::AUTH_INVALID_CREDENCIALS, 401);
         }
 
-        return $this->respondWithToken($token);
+        $user = User::where('email', $request->email)->first();
+
+        return new JsonResponse(
+            [
+                'user' => $user,
+                'token' => $user->createToken('Angular.token')->plainTextToken,
+            ],
+            201
+        );
     }
 
     /**
@@ -47,9 +47,10 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function me()
+    public function show()
     {
-        return response()->json(auth()->user());
+        $user = Auth::user();
+        return new JsonResponse($user);
     }
 
     /**
@@ -57,53 +58,17 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout()
+    public function destroy()
     {
-        auth()->logout();
-        return response()->json(['message' => 'Successfully logged out']);
+        $user = Auth::user();
+        $user->tokens()->delete();
+        Auth::forgetGuards();
+
+        return new JsonResponse(
+            [
+                'message' => MessageCode::AUTH_LOGOUT_SUCCESS
+            ],
+            200
+        );
     }
-
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        //return $this->respondWithToken(auth()->refresh());
-    }
-
-    /**
-     * Get the token array structure.
-     *
-     * @param  string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            //'expires_in' => auth()-> ->factory()->getTTL() * 60
-        ]);
-    }
-
-
-    public function reset(ResetPassword $request)
-    {
-        $credentials = array_merge($request->only('email', 'password',
-            'password_confirmation', 'token'), ['deleted' => 0, 'activated' => 1]);
-
-        // try to change user password
-        $response = Password::broker()
-            ->reset($credentials, function ($user, $password) {
-                $user->password = $password;
-                $user->save();
-            });
-
-        // return valid response based on Password broker response
-        return $response;
-    }
-
 }

@@ -10,10 +10,12 @@ class LoginController extends Controller
 {
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $credentials = $request->validate(
+            [
             'email' => ['required', 'email'],
             'password' => ['required'],
-        ]);
+            ]
+        );
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
@@ -22,10 +24,13 @@ class LoginController extends Controller
             return response()->json($user);
         }
 
-        return response()->json([
+        return response()->json(
+            [
             'errors' => [
                 'email' => 'The provided credentials do not match our records.',
             ]
-        ], 422);
+            ],
+            422
+        );
     }
 }

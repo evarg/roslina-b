@@ -9,9 +9,11 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\URL;
+
 class VerificationEmail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public $user;
     public $url;
@@ -25,7 +27,8 @@ class VerificationEmail extends Mailable
     {
         $this->user = $user;
         $this->url = URL::signedRoute(
-          'email.verify', ['id' => $user->id]
+            'email.verify',
+            ['id' => $user->id]
         );
     }
 
@@ -63,4 +66,3 @@ class VerificationEmail extends Mailable
         return [];
     }
 }
-

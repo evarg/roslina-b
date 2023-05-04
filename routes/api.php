@@ -1,26 +1,17 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\PacketController;
 use App\Http\Controllers\ProducerController;
-use App\Http\Controllers\FileController;
-use App\Http\Controllers\UploadController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\ImageController;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Includes refactor
-|--------------------------------------------------------------------------
-*/
+use App\Http\Controllers\TestAllController;
+use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Hash;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,10 +43,6 @@ Route::apiResource('images', ImageController::class);
 
 Route::get('status', [App\Http\Controllers\AuthController::class, 'status']);
 
-Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout']);
-Route::post('me', [AuthController::class, 'me']);
-
 Route::post('register', [RegisterController::class, 'register']);
 Route::get('/email/verify', [RegisterController::class, 'show']);
 Route::get('/email/verify/{id}/{hash}', [RegisterController::class, 'verify']);
@@ -67,22 +54,18 @@ Route::model('producer', 'App\Models\Producer');
 Route::model('packet', 'App\Models\Packet');
 Route::get('/test/{producer}/{packet}', [UserController::class, 'test']);
 
-
 // Route::post('refresh', 'AuthController@refresh');
 
 Route::get('/email/verify/{id}', [RegisterController::class, 'verify'])
     ->name('email.verify')
     ->middleware('signed');
 
-
 Route::get('testuncio', function () {
-    $c1 = Hash::make('dduuuppaa');
-    $c2 = Hash::check('dduuuppaa', $c1);
-    $c3 = Hash::check('dduuuppaa', $c1);
-
-    return $c1 . ' - ' . $c2 . ' - ' . $c3;
+    $test = self::$methods;
+    return $test;
 });
 
+Route::apiResource('testall', TestAllController::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -91,7 +74,15 @@ Route::get('testuncio', function () {
 |
 */
 
+/*
+    Auth
+*/
+Route::post('auth', [AuthController::class, 'store'])->name('login');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::delete('auth', [AuthController::class, 'destroy'])->name('logout');
+    Route::get('auth', [AuthController::class, 'show'])->name('me');
+});
+
 Route::post('users', [UserController::class, 'store']);
 Route::put('users/{user}', [UserController::class, 'update']);
-
 Route::get('users/{user}', [UserController::class, 'show']);

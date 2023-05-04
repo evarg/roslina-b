@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('packets', function (Blueprint $table) {
-            $table->dropColumn('producer');
-            $table->integer('producer_id')->after('name_latin')->nullable();
+        Schema::create('test_alls', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
         });
     }
 
@@ -26,9 +26,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('packets', function (Blueprint $table) {
-            $table->string('producer', 100)->after('name_latin')->nullable();
-            $table->dropColumn('producer_id');
-        });
+        Schema::dropIfExists('test_alls');
     }
 };
