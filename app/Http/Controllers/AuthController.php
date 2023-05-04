@@ -2,29 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use App\Helpers\ApiResponse;
 use App\Helpers\ErrorCode;
 use App\Helpers\MessageCode;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
-use App\Http\Requests\ResetPassword;
-use Illuminate\Support\Facades\Password;
 use App\Http\Requests\StoreAuthRequest;
 use App\Models\User;
 
 class AuthController extends Controller
 {
-    /**
-     * Create a new AuthController instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth:api', ['except' => ['store']]);
-    }
-
     /**
      * Log in user.
      *
@@ -47,8 +35,8 @@ class AuthController extends Controller
 
         return new JsonResponse(
             [
-            'user' => $user,
-            'token' => $user->createToken('Angular.token')->plainTextToken,
+                'user' => $user,
+                'token' => $user->createToken('Angular.token')->plainTextToken,
             ],
             201
         );
@@ -61,7 +49,8 @@ class AuthController extends Controller
      */
     public function show()
     {
-        return response()->json(auth()->user());
+        $user = Auth::user();
+        return new JsonResponse($user);
     }
 
     /**
@@ -71,62 +60,15 @@ class AuthController extends Controller
      */
     public function destroy()
     {
-        auth()->logout();
-        return new JsonResponse(['message' => MessageCode::AUTH_LOGOUT_SUCCESS], 200);
-    }
+        $user = Auth::user();
+        $user->tokens()->delete();
+        Auth::forgetGuards();
 
-    /**
-     * Refresh a token.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function refresh()
-    {
-        //return $this->respondWithToken(auth()->refresh());
-    }
-
-    /**
-     * Get the token array structure.
-     *
-     * @param string $token
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    protected function respondWithToken($token)
-    {
-        return response()->json(
+        return new JsonResponse(
             [
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            //'expires_in' => auth()-> ->factory()->getTTL() * 60
-            ]
+                'message' => MessageCode::AUTH_LOGOUT_SUCCESS
+            ],
+            200
         );
-    }
-
-
-    public function reset(ResetPassword $request)
-    {
-        $credentials = array_merge(
-            $request->only(
-                'email',
-                'password',
-                'password_confirmation',
-                'token'
-            ),
-            ['deleted' => 0, 'activated' => 1]
-        );
-
-        // try to change user password
-        $response = Password::broker()
-            ->reset(
-                $credentials,
-                function ($user, $password) {
-                    $user->password = $password;
-                    $user->save();
-                }
-            );
-
-        // return valid response based on Password broker response
-        return $response;
     }
 }

@@ -69,4 +69,40 @@ class AuthControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function test_user_can_show_own_data_when_login(): void
+    {
+        $this->createUser();
+
+        $response = $this->actingas($this->user)->getJson('/api/auth');
+//        $response = $this->getJson('/api/auth');
+        $response
+            ->assertStatus(200)
+            ->assertJson(
+                [
+                    'name' => $this->user->name,
+                    'email' => $this->user->email
+                ]
+            );
+        }
+
+        public function test_user_cant_show_own_data_when_not_login(): void
+        {
+            $response = $this->getJson('/api/auth');
+            $response->assertStatus(401);
+        }
+
+        public function test_user_can_logout_when_is_login(): void
+        {
+            $this->createUser();
+            $response = $this->actingas($this->user)->deleteJson('/api/auth');
+            $response->assertStatus(200);
+            print_r($response->json());
+    }
+
+    public function test_user_cant_logout_when_not_login(): void
+    {
+        $response = $this->deleteJson('/api/auth');
+        $response->assertStatus(401);
+    }
+
 }
