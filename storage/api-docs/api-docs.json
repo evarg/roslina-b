@@ -1,0 +1,140 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "roslina.com.pl documentation",
+        "description": "System zarządzania domową ",
+        "contact": {
+            "email": "grave432@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://roslina.poligon",
+            "description": "roslina.poligon"
+        }
+    ],
+    "paths": {
+        "/v1/profile": {
+            "get": {
+                "tags": [
+                    "profile"
+                ],
+                "summary": "Retrieve profile information",
+                "description": "Get profile short information",
+                "operationId": "profileShow",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/profileGet"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "User should be authorized to get profile information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Not authorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "profileGet": {
+                "allOf": [
+                    {
+                        "properties": {
+                            "categories": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "Packet": {},
+            "Producer": {
+                "properties": {
+                    "name": {
+                        "description": "The producer name",
+                        "type": "string"
+                    },
+                    "desc": {
+                        "description": "The producer description",
+                        "type": "string"
+                    },
+                    "country": {
+                        "description": "The producer name",
+                        "type": "string"
+                    },
+                    "packets": {
+                        "description": "Packets list of producer",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Packet"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "properties": {
+                    "created_at": {
+                        "description": "Initial creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    },
+                    "deleted_at": {
+                        "description": "Soft delete timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Projects",
+            "description": "API Endpoints of Projects"
+        }
+    ]
+}

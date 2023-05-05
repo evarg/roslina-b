@@ -14,11 +14,37 @@ use App\Models\User;
 class AuthController extends Controller
 {
     /**
-     * Log in user.
+     * @OA\Schema(
+     *     schema="profileGet",
+     * allOf={
+     *    @OA\Schema(
+     *       @OA\Property(property="categories", type="array", @OA\Items(ref="#/components/schemas/User")),
+     *    )
+     * }
+     * )
      *
-     * @param StoreAuthRequest $request
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(
+     * path="/v1/profile",
+     * summary="Retrieve profile information",
+     * description="Get profile short information",
+     * operationId="profileShow",
+     * tags={"profile"},
+     * security={ {"bearer": {} }},
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="data", type="object", ref="#/components/schemas/profileGet")
+     *        )
+     *     ),
+     * @OA\Response(
+     *    response=401,
+     *    description="User should be authorized to get profile information",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Not authorized"),
+     *    )
+     * )
+     * )
      */
     public function store(StoreAuthRequest $request)
     {

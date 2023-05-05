@@ -65,6 +65,7 @@ Route::get('testuncio', function () {
     return $test;
 });
 
+
 Route::apiResource('testall', TestAllController::class);
 
 /*

@@ -40,9 +40,9 @@ class ProducerController extends Controller
      * @param  \App\Models\Producer $producer
      * @return \Illuminate\Http\Response
      */
-    public function show(Packet $producer, Request $request)
+    public function show(Producer $producer, Request $request)
     {
-        //        $producer->packets = $producer->packets;
+        $producer = Producer::with('packets')->findOrFail($producer->id);
         return new JsonResponse($producer, 200);
     }
 
