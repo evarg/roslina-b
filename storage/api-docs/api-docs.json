@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "roslina.com.pl documentation",
-        "description": "System zarządzania domową ",
+        "description": "System zarządzania domową rozsadą",
         "contact": {
             "email": "grave432@gmail.com"
         },
@@ -15,23 +15,26 @@
         }
     ],
     "paths": {
-        "/v1/profile": {
-            "get": {
+        "/auth": {
+            "post": {
                 "tags": [
-                    "profile"
+                    "auth"
                 ],
-                "summary": "Retrieve profile information",
-                "description": "Get profile short information",
+                "summary": "Login user",
+                "description": "Login user with valid crednecials and return token",
                 "operationId": "profileShow",
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Success",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/profileGet"
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        },
+                                        "token": {
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -40,27 +43,32 @@
                         }
                     },
                     "401": {
-                        "description": "User should be authorized to get profile information",
+                        "description": "Invalid credencials",
                         "content": {
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "message": {
+                                        "code": {
                                             "type": "string",
-                                            "example": "Not authorized"
+                                            "example": "auth.invalid_credencials"
                                         }
                                     },
                                     "type": "object"
                                 }
                             }
                         }
+                    },
+                    "422": {
+                        "description": "No required fields",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/apiResponse422"
+                                }
+                            }
+                        }
                     }
-                },
-                "security": [
-                    {
-                        "bearer": []
-                    }
-                ]
+                }
             }
         },
         "/packets/:id": {
@@ -162,20 +170,25 @@
     },
     "components": {
         "schemas": {
-            "profileGet": {
-                "allOf": [
-                    {
+            "apiResponse422": {
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    },
+                    "errors": {
                         "properties": {
-                            "categories": {
+                            "email": {
                                 "type": "array",
                                 "items": {
-                                    "$ref": "#/components/schemas/User"
+                                    "type": "string",
+                                    "example": "The email field is required."
                                 }
                             }
                         },
                         "type": "object"
                     }
-                ]
+                },
+                "type": "object"
             },
             "packetWithProducer": {
                 "allOf": [
@@ -340,7 +353,7 @@
                     },
                     "producer_id": {
                         "description": "package manufacturer id",
-                        "type": "string"
+                        "type": "integer"
                     },
                     "expiration_date": {
                         "description": "package expiration date",
@@ -375,11 +388,11 @@
                         "readOnly": "true"
                     },
                     "name": {
-                        "description": "packet name",
+                        "description": "pproducer name",
                         "type": "string"
                     },
                     "desc": {
-                        "description": "packet description",
+                        "description": "producer description",
                         "type": "string"
                     },
                     "country": {
@@ -414,13 +427,15 @@
                     },
                     "email": {
                         "description": "user's email",
-                        "type": "string"
+                        "type": "string",
+                        "format": "email"
                     },
                     "email_verified_at": {
                         "description": "date of email verification by the user",
                         "type": "string",
                         "format": "date-time",
-                        "readOnly": "true"
+                        "readOnly": "true",
+                        "nullable": "true"
                     },
                     "created_at": {
                         "description": "Initial creation timestamp",
@@ -438,11 +453,5 @@
                 "type": "object"
             }
         }
-    },
-    "tags": [
-        {
-            "name": "Projects",
-            "description": "API Endpoints of Projects"
-        }
-    ]
+    }
 }

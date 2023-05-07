@@ -25,12 +25,12 @@ use App\Notifications\ResetPasswordNotification;
  *  @OA\Property(
  *    property="email",
  *    description="user's email",
- *    type="string",
+ *    type="string", format="email",
  *  ),
  *  @OA\Property(
  *    property="email_verified_at",
  *    description="date of email verification by the user",
- *    type="string", format="date-time", readOnly="true",
+ *    type="string", format="date-time", readOnly="true", nullable="true",
  *   ),
  *   @OA\Property(
  *     property="created_at",

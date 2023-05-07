@@ -14,36 +14,34 @@ use App\Models\User;
 class AuthController extends Controller
 {
     /**
-     * @OA\Schema(
-     *     schema="profileGet",
-     * allOf={
-     *    @OA\Schema(
-     *       @OA\Property(property="categories", type="array", @OA\Items(ref="#/components/schemas/User")),
-     *    )
-     * }
-     * )
-     *
-     * @OA\Get(
-     * path="/v1/profile",
-     * summary="Retrieve profile information",
-     * description="Get profile short information",
-     * operationId="profileShow",
-     * tags={"profile"},
-     * security={ {"bearer": {} }},
-     * @OA\Response(
-     *    response=200,
-     *    description="Success",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="data", type="object", ref="#/components/schemas/profileGet")
-     *        )
+     * @OA\Post(
+     *   path="/auth",
+     *   summary="Login user",
+     *   description="Login user with valid crednecials and return token",
+     *   operationId="profileShow",
+     *   tags={"auth"},
+     *   @OA\Response(
+     *     response=201,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="user", type="object", ref="#/components/schemas/User"),
+     *       @OA\Property(property="token", type="string"),
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="Invalid credencials",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="code", type="string", example="auth.invalid_credencials"),
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=422,
+     *     description="No required fields",
+     *     @OA\JsonContent(
+     *       ref="#/components/schemas/apiResponse422")
      *     ),
-     * @OA\Response(
-     *    response=401,
-     *    description="User should be authorized to get profile information",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Not authorized"),
-     *    )
-     * )
+     *   ),
      * )
      */
     public function store(StoreAuthRequest $request)
