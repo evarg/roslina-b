@@ -10,7 +10,6 @@ use RuntimeException;
 
 class TestAllController extends Controller
 {
-
     /**
      * Display a listing of the resource.
      *

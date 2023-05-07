@@ -12,9 +12,37 @@ use Illuminate\Http\Request;
 class ProducerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @OA\Schema(
+     *   schema="producersList",
+     *   allOf={
+     *     @OA\Schema(
+     *       @OA\Property(property="producers", type="array", @OA\Items(ref="#/components/schemas/Producer")),
+     *    )
+     *   }
+     * )
      *
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     * path="/v1/profile2",
+     * summary="Retrieve profile information",
+     * description="Get profile short information",
+     * operationId="profileShow2",
+     * tags={"profile2"},
+     * security={ {"bearer": {} }},
+     * @OA\Response(
+     *    response=200,
+     *    description="Success",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="data", type="object", ref="#/components/schemas/producersList")
+     *        )
+     *     ),
+     * @OA\Response(
+     *    response=401,
+     *    description="User should be authorized to get profile information",
+     *    @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Not authorized"),
+     *    )
+     * )
+     * )
      */
     public function index()
     {
@@ -56,7 +84,6 @@ class ProducerController extends Controller
     public function update(UpdateProducerRequest $request, Producer $producer)
     {
         $producer->update($request->all());
-        ;
         return new JsonResponse(Producer::find($producer->id), 201);
     }
 

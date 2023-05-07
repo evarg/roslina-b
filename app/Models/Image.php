@@ -5,6 +5,49 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @OA\Schema(
+ *   @OA\Property(
+ *     property="id",
+ *     description="image id",
+ *     type="integer",
+ *   ),
+ *   @OA\Property(
+ *     property="name",
+ *     description="image description",
+ *     type="string",
+ *   ),
+ *   @OA\Property(
+ *     property="org_name",
+ *     type="string",
+ *     description="image orginalfile name",
+ *   ),
+ *   @OA\Property(
+ *     property="file_name",
+ *     description="image file name",
+ *     type="string",
+ *   ),
+ *   @OA\Property(
+ *     property="mime",
+ *     description="image mime type",
+ *     type="string",
+ *   ),
+ *   @OA\Property(
+ *     property="size",
+ *     description="image size",
+ *     type="string",
+ *   ),
+ *   @OA\Property(
+ *     property="created_at",
+ *     description="Initial creation timestamp",
+ *     type="string", format="date-time", readOnly="true",
+ *   ),
+ *   @OA\Property(property="updated_at",
+ *     description="Last update timestamp",
+ *     type="string", format="date-time", readOnly="true",
+ *   ),
+ * )
+ */
 class Image extends Model
 {
     use HasFactory;

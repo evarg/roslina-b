@@ -62,6 +62,102 @@
                     }
                 ]
             }
+        },
+        "/packets/:id": {
+            "get": {
+                "tags": [
+                    "packets"
+                ],
+                "summary": "Retrieve packet information",
+                "description": "Get packet information with additions",
+                "operationId": "9b5ba23c30919adbb6639c12f1adef3b",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "packet": {
+                                            "$ref": "#/components/schemas/packetWithProducer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "User should be authorized to get packet information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Not authorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/v1/profile2": {
+            "get": {
+                "tags": [
+                    "profile2"
+                ],
+                "summary": "Retrieve profile information",
+                "description": "Get profile short information",
+                "operationId": "profileShow2",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/components/schemas/producersList"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "User should be authorized to get profile information",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Not authorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -81,33 +177,88 @@
                     }
                 ]
             },
-            "Packet": {},
-            "Producer": {
-                "properties": {
-                    "name": {
-                        "description": "The producer name",
-                        "type": "string"
+            "packetWithProducer": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/Packet"
                     },
-                    "desc": {
-                        "description": "The producer description",
-                        "type": "string"
+                    {
+                        "properties": {
+                            "producer": {
+                                "$ref": "#/components/schemas/Producer"
+                            }
+                        },
+                        "type": "object"
                     },
-                    "country": {
-                        "description": "The producer name",
-                        "type": "string"
+                    {
+                        "properties": {
+                            "front": {
+                                "oneOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Image"
+                                    }
+                                ],
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
                     },
-                    "packets": {
-                        "description": "Packets list of producer",
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/Packet"
-                        }
+                    {
+                        "properties": {
+                            "back": {
+                                "oneOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Image"
+                                    }
+                                ],
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
                     }
-                },
-                "type": "object"
+                ]
             },
-            "User": {
+            "producersList": {
+                "allOf": [
+                    {
+                        "properties": {
+                            "producers": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Producer"
+                                }
+                            }
+                        },
+                        "type": "object"
+                    }
+                ]
+            },
+            "File": {
                 "properties": {
+                    "id": {
+                        "description": "file id",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "file description",
+                        "type": "string"
+                    },
+                    "org_name": {
+                        "description": "file orginalfile name",
+                        "type": "string"
+                    },
+                    "file_name": {
+                        "description": "file file name",
+                        "type": "string"
+                    },
+                    "mime": {
+                        "description": "file mime type",
+                        "type": "string"
+                    },
+                    "size": {
+                        "description": "file size",
+                        "type": "string"
+                    },
                     "created_at": {
                         "description": "Initial creation timestamp",
                         "type": "string",
@@ -119,9 +270,166 @@
                         "type": "string",
                         "format": "date-time",
                         "readOnly": "true"
+                    }
+                },
+                "type": "object"
+            },
+            "Image": {
+                "properties": {
+                    "id": {
+                        "description": "image id",
+                        "type": "integer"
                     },
-                    "deleted_at": {
-                        "description": "Soft delete timestamp",
+                    "name": {
+                        "description": "image description",
+                        "type": "string"
+                    },
+                    "org_name": {
+                        "description": "image orginalfile name",
+                        "type": "string"
+                    },
+                    "file_name": {
+                        "description": "image file name",
+                        "type": "string"
+                    },
+                    "mime": {
+                        "description": "image mime type",
+                        "type": "string"
+                    },
+                    "size": {
+                        "description": "image size",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Initial creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    }
+                },
+                "type": "object"
+            },
+            "Packet": {
+                "properties": {
+                    "id": {
+                        "description": "packet id",
+                        "type": "integer",
+                        "readOnly": "true"
+                    },
+                    "name": {
+                        "description": "packet name",
+                        "type": "string"
+                    },
+                    "desc": {
+                        "description": "packet description",
+                        "type": "string"
+                    },
+                    "name_polish": {
+                        "description": "polish package name",
+                        "type": "string"
+                    },
+                    "name_latin": {
+                        "description": "latin package name",
+                        "type": "string"
+                    },
+                    "producer_id": {
+                        "description": "package manufacturer id",
+                        "type": "string"
+                    },
+                    "expiration_date": {
+                        "description": "package expiration date",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "purchase_date": {
+                        "description": "package purchase date",
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "created_at": {
+                        "description": "Initial creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    }
+                },
+                "type": "object"
+            },
+            "Producer": {
+                "properties": {
+                    "id": {
+                        "description": "packet id",
+                        "type": "integer",
+                        "readOnly": "true"
+                    },
+                    "name": {
+                        "description": "packet name",
+                        "type": "string"
+                    },
+                    "desc": {
+                        "description": "packet description",
+                        "type": "string"
+                    },
+                    "country": {
+                        "description": "country of manufacture",
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "description": "Initial creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "properties": {
+                    "id": {
+                        "description": "user's id",
+                        "type": "integer",
+                        "readOnly": "true"
+                    },
+                    "name": {
+                        "description": "user's name",
+                        "type": "string"
+                    },
+                    "email": {
+                        "description": "user's email",
+                        "type": "string"
+                    },
+                    "email_verified_at": {
+                        "description": "date of email verification by the user",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    },
+                    "created_at": {
+                        "description": "Initial creation timestamp",
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": "true"
+                    },
+                    "updated_at": {
+                        "description": "Last update timestamp",
                         "type": "string",
                         "format": "date-time",
                         "readOnly": "true"

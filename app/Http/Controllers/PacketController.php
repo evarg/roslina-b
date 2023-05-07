@@ -64,10 +64,43 @@ class PacketController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Schema(
+     *   schema="packetWithProducer",
+     *   allOf={
+     *     @OA\Schema(ref="#/components/schemas/Packet"),
+     *     @OA\Schema(
+     *       @OA\Property(property="producer", type="object", ref="#/components/schemas/Producer", nullable=false),
+     *     ),
+     *     @OA\Schema(
+     *       @OA\Property(property="front", type="object", ref="#/components/schemas/Image", nullable=true),
+     *     ),
+     *     @OA\Schema(
+     *       @OA\Property(property="back", type="object", ref="#/components/schemas/Image", nullable=true),
+     *     )
+     *   }
+     * )
      *
-     * @param  \App\Models\packet $packet
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *   path="/packets/:id",
+     *   summary="Retrieve packet information",
+     *   description="Get packet information with additions",
+     *   tags={"packets"},
+     *   security={ {"bearer": {} }},
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="packet", type="object", ref="#/components/schemas/packetWithProducer")
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="User should be authorized to get packet information",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Not authorized"),
+     *     )
+     *   )
+     * )
      */
     public function show(packet $packet)
     {
