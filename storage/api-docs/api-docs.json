@@ -15,14 +15,33 @@
         }
     ],
     "paths": {
-        "/auth": {
+        "/auth2": {
             "post": {
                 "tags": [
                     "auth"
                 ],
                 "summary": "Login user",
                 "description": "Login user with valid crednecials and return token",
-                "operationId": "profileShow",
+                "operationId": "5ba5faf757611acb8393ac40493db566",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "email"
+                        }
+                    },
+                    {
+                        "name": "password",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "201": {
                         "description": "Success",
@@ -64,6 +83,91 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/apiResponse422"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth": {
+            "get": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Get logged in user",
+                "description": "Logout user and destroy all user's tokens",
+                "operationId": "f6eb7532cc86794e4c976cbe4a76e9e6",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Non authorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Logout user",
+                "description": "Logout user and destroy all user's tokens",
+                "operationId": "df2eee26444444a49a587c8073a4bf74",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "auth.logout_success"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Non authorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Non authorized"
+                                        }
+                                    },
+                                    "type": "object"
                                 }
                             }
                         }

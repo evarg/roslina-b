@@ -12,17 +12,8 @@ use Illuminate\Http\Request;
 class ProducerController extends Controller
 {
     /**
-     * @OA\Schema(
-     *   schema="producersList",
-     *   allOf={
-     *     @OA\Schema(
-     *       @OA\Property(property="producers", type="array", @OA\Items(ref="#/components/schemas/Producer")),
-     *    )
-     *   }
-     * )
-     *
      * @OA\Get(
-     * path="/v1/profile2",
+     * path="/producers",
      * summary="Retrieve profile information",
      * description="Get profile short information",
      * operationId="profileShow2",
@@ -46,7 +37,10 @@ class ProducerController extends Controller
      */
     public function index()
     {
-        return new JsonResponse(Producer::all(), 200);
+        $producersList = [
+            "data" => Producer::all()
+        ];
+        return new JsonResponse($producersList, 200);
     }
 
     /**

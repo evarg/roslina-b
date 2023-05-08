@@ -35,7 +35,6 @@ Route::post('packets/{id}/add_file_upload', [PacketController::class, 'addFileUp
 Route::get('packets/{id}/remove_file/{fileId}', [PacketController::class, 'removeFile']);
 Route::get('packets2/{id}', [PacketController::class, 'show2']);
 
-Route::apiResource('producers', ProducerController::class);
 Route::apiResource('files', FileController::class);
 Route::apiResource('upload', UploadController::class);
 
@@ -60,10 +59,6 @@ Route::get('/email/verify/{id}', [RegisterController::class, 'verify'])
     ->name('email.verify')
     ->middleware('signed');
 
-Route::get('testuncio', function () {
-    $test = self::$methods;
-    return $test;
-});
 
 
 Route::apiResource('testall', TestAllController::class);
@@ -83,6 +78,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('auth', [AuthController::class, 'destroy'])->name('logout');
     Route::get('auth', [AuthController::class, 'show'])->name('me');
 });
+
+/*
+    Producers
+*/
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('producers', ProducerController::class);
+});
+
+Route::middleware('api_autt')->group(function () {
+    Route::get('testuncio', function () {
+        $test = 'asdf';
+        return $test;
+    });
+});
+
 
 Route::post('users', [UserController::class, 'store']);
 Route::put('users/{user}', [UserController::class, 'update']);

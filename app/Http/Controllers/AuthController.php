@@ -18,8 +18,24 @@ class AuthController extends Controller
      *   path="/auth",
      *   summary="Login user",
      *   description="Login user with valid crednecials and return token",
-     *   operationId="profileShow",
      *   tags={"auth"},
+     *   @OA\Parameter(
+     *     in="query",
+     *     name="email",
+     *     required=true,
+     *     @OA\Schema(
+     *       type="string",
+     *       format="email"
+     *     )
+     *   ),
+     *   @OA\Parameter(
+     *     in="query",
+     *     name="password",
+     *     required=true,
+     *     @OA\Schema(
+     *       type="string",
+     *     )
+     *   ),
      *   @OA\Response(
      *     response=201,
      *     description="Success",
@@ -67,20 +83,54 @@ class AuthController extends Controller
     }
 
     /**
-     * Get the authenticated User.
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Get(
+     *   path="/auth",
+     *   summary="Get logged in user",
+     *   description="Logout user and destroy all user's tokens",
+     *   tags={"auth"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="user", type="object", ref="#/components/schemas/User"),
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="Non authorized",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Non authorized"),
+     *     )
+     *   ),
+     * )
      */
     public function show()
     {
         $user = Auth::user();
-        return new JsonResponse($user);
+        return new JsonResponse(["user" => $user]);
     }
 
     /**
-     * Log the user out (Invalidate the token).
-     *
-     * @return \Illuminate\Http\JsonResponse
+     * @OA\Delete(
+     *   path="/auth",
+     *   summary="Logout user",
+     *   description="Logout user and destroy all user's tokens",
+     *   tags={"auth"},
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="auth.logout_success"),
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     description="Non authorized",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="message", type="string", example="Non authorized"),
+     *     )
+     *   ),
+     * )
      */
     public function destroy()
     {
