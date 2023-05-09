@@ -64,22 +64,6 @@ class PacketController extends Controller
     }
 
     /**
-     * @OA\Schema(
-     *   schema="packetWithProducer",
-     *   allOf={
-     *     @OA\Schema(ref="#/components/schemas/Packet"),
-     *     @OA\Schema(
-     *       @OA\Property(property="producer", type="object", ref="#/components/schemas/Producer", nullable=false),
-     *     ),
-     *     @OA\Schema(
-     *       @OA\Property(property="front", type="object", ref="#/components/schemas/Image", nullable=true),
-     *     ),
-     *     @OA\Schema(
-     *       @OA\Property(property="back", type="object", ref="#/components/schemas/Image", nullable=true),
-     *     )
-     *   }
-     * )
-     *
      * @OA\Get(
      *   path="/packets/:id",
      *   summary="Retrieve packet information",
@@ -90,15 +74,12 @@ class PacketController extends Controller
      *     response=200,
      *     description="Success",
      *     @OA\JsonContent(
-     *       @OA\Property(property="packet", type="object", ref="#/components/schemas/packetWithProducer")
+     *       @OA\Property(property="packet", type="object", ref="#/components/schemas/Packet")
      *     )
      *   ),
      *   @OA\Response(
      *     response=401,
-     *     description="User should be authorized to get packet information",
-     *     @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Not authorized"),
-     *     )
+     *     ref="#/components/responses/ApiResponse401",
      *   )
      * )
      */

@@ -15,14 +15,42 @@
         }
     ],
     "paths": {
-        "/auth2": {
+        "/auth": {
+            "get": {
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Get logged in user",
+                "description": "Logout user and destroy all user's tokens",
+                "operationId": "f6eb7532cc86794e4c976cbe4a76e9e6",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/ApiResponse401"
+                    }
+                }
+            },
             "post": {
                 "tags": [
                     "auth"
                 ],
                 "summary": "Login user",
                 "description": "Login user with valid crednecials and return token",
-                "operationId": "5ba5faf757611acb8393ac40493db566",
+                "operationId": "eecd875305a510812e3cfb3b2ecf4597",
                 "parameters": [
                     {
                         "name": "email",
@@ -62,73 +90,10 @@
                         }
                     },
                     "401": {
-                        "description": "Invalid credencials",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "code": {
-                                            "type": "string",
-                                            "example": "auth.invalid_credencials"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/ApiResponse401"
                     },
                     "422": {
-                        "description": "No required fields",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/apiResponse422"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/auth": {
-            "get": {
-                "tags": [
-                    "auth"
-                ],
-                "summary": "Get logged in user",
-                "description": "Logout user and destroy all user's tokens",
-                "operationId": "f6eb7532cc86794e4c976cbe4a76e9e6",
-                "responses": {
-                    "200": {
-                        "description": "Success",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "user": {
-                                            "$ref": "#/components/schemas/User"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "401": {
-                        "description": "Non authorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Non authorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/ApiResponse422"
                     }
                 }
             },
@@ -155,22 +120,6 @@
                                 }
                             }
                         }
-                    },
-                    "401": {
-                        "description": "Non authorized",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Non authorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
                     }
                 }
             }
@@ -191,7 +140,7 @@
                                 "schema": {
                                     "properties": {
                                         "packet": {
-                                            "$ref": "#/components/schemas/packetWithProducer"
+                                            "$ref": "#/components/schemas/Packet"
                                         }
                                     },
                                     "type": "object"
@@ -200,20 +149,7 @@
                         }
                     },
                     "401": {
-                        "description": "User should be authorized to get packet information",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Not authorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/ApiResponse401"
                     }
                 },
                 "security": [
@@ -223,14 +159,14 @@
                 ]
             }
         },
-        "/v1/profile2": {
+        "/producers": {
             "get": {
                 "tags": [
-                    "profile2"
+                    "producer"
                 ],
-                "summary": "Retrieve profile information",
-                "description": "Get profile short information",
-                "operationId": "profileShow2",
+                "summary": "Get list of all producers",
+                "description": "\n     *     Get list of all producers. Targer functionality is:\n     *      - get global defined producers\n     *      - get logged in user defined producers\n     *      - get shared producers of other users\n     *      - if user is admin get all producers\n     *     ",
+                "operationId": "a0235a08d910720e97d8a1edd9468186",
                 "responses": {
                     "200": {
                         "description": "Success",
@@ -238,8 +174,15 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/producersList"
+                                        "packets": {
+                                            "type": "array",
+                                            "items": {
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                ]
+                                            }
                                         }
                                     },
                                     "type": "object"
@@ -248,20 +191,7 @@
                         }
                     },
                     "401": {
-                        "description": "User should be authorized to get profile information",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Not authorized"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
+                        "$ref": "#/components/responses/ApiResponse401"
                     }
                 },
                 "security": [
@@ -270,86 +200,150 @@
                     }
                 ]
             }
+        },
+        "/search": {
+            "get": {
+                "tags": [
+                    "search"
+                ],
+                "summary": "A list of most popular items",
+                "description": "A list of most popular items",
+                "operationId": "179dd19869bd77bf830ec567d551930e",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "packets": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/components/schemas/Packet"
+                                                    },
+                                                    {
+                                                        "properties": {
+                                                            "front": {
+                                                                "$ref": "#/components/schemas/Image"
+                                                            },
+                                                            "back": {
+                                                                "$ref": "#/components/schemas/Image"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "producers": {
+                                            "type": "array",
+                                            "items": {
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/components/schemas/Producer"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/search/{search}": {
+            "get": {
+                "tags": [
+                    "search"
+                ],
+                "summary": "A list of found items",
+                "description": "A list of found items",
+                "operationId": "07cb0aaffde0be9ebdbf265b5d2ab11c",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "packets": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/components/schemas/Packet"
+                                                    },
+                                                    {
+                                                        "properties": {
+                                                            "front": {
+                                                                "$ref": "#/components/schemas/Image"
+                                                            },
+                                                            "back": {
+                                                                "$ref": "#/components/schemas/Image"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "producers": {
+                                            "type": "array",
+                                            "items": {
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/components/schemas/Producer"
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        "users": {
+                                            "type": "array",
+                                            "items": {
+                                                "allOf": [
+                                                    {
+                                                        "$ref": "#/components/schemas/User"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
         "schemas": {
-            "apiResponse422": {
-                "properties": {
-                    "message": {
-                        "type": "string"
-                    },
-                    "errors": {
-                        "properties": {
-                            "email": {
-                                "type": "array",
-                                "items": {
-                                    "type": "string",
-                                    "example": "The email field is required."
-                                }
-                            }
-                        },
-                        "type": "object"
-                    }
-                },
-                "type": "object"
-            },
-            "packetWithProducer": {
-                "allOf": [
-                    {
-                        "$ref": "#/components/schemas/Packet"
-                    },
-                    {
-                        "properties": {
-                            "producer": {
-                                "$ref": "#/components/schemas/Producer"
-                            }
-                        },
-                        "type": "object"
-                    },
-                    {
-                        "properties": {
-                            "front": {
-                                "oneOf": [
-                                    {
-                                        "$ref": "#/components/schemas/Image"
-                                    }
-                                ],
-                                "nullable": true
-                            }
-                        },
-                        "type": "object"
-                    },
-                    {
-                        "properties": {
-                            "back": {
-                                "oneOf": [
-                                    {
-                                        "$ref": "#/components/schemas/Image"
-                                    }
-                                ],
-                                "nullable": true
-                            }
-                        },
-                        "type": "object"
-                    }
-                ]
-            },
-            "producersList": {
-                "allOf": [
-                    {
-                        "properties": {
-                            "producers": {
-                                "type": "array",
-                                "items": {
-                                    "$ref": "#/components/schemas/Producer"
-                                }
-                            }
-                        },
-                        "type": "object"
-                    }
-                ]
-            },
             "File": {
                 "properties": {
                     "id": {
@@ -555,6 +549,51 @@
                     }
                 },
                 "type": "object"
+            }
+        },
+        "responses": {
+            "ApiResponse401": {
+                "description": "Invalid credencials",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "code": {
+                                    "type": "string",
+                                    "example": "auth.invalid_credencials"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
+            },
+            "ApiResponse422": {
+                "description": "No required fields",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "properties": {
+                                "message": {
+                                    "type": "string"
+                                },
+                                "errors": {
+                                    "properties": {
+                                        "email": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string",
+                                                "example": "The email field is required."
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    }
+                }
             }
         }
     }

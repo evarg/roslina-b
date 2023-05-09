@@ -46,17 +46,11 @@ class AuthController extends Controller
      *   ),
      *   @OA\Response(
      *     response=401,
-     *     description="Invalid credencials",
-     *     @OA\JsonContent(
-     *       @OA\Property(property="code", type="string", example="auth.invalid_credencials"),
-     *     )
+     *     ref="#/components/responses/ApiResponse401",
      *   ),
      *   @OA\Response(
      *     response=422,
-     *     description="No required fields",
-     *     @OA\JsonContent(
-     *       ref="#/components/schemas/apiResponse422")
-     *     ),
+     *     ref="#/components/responses/ApiResponse422",
      *   ),
      * )
      */
@@ -97,10 +91,7 @@ class AuthController extends Controller
      *   ),
      *   @OA\Response(
      *     response=401,
-     *     description="Non authorized",
-     *     @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Non authorized"),
-     *     )
+     *     ref="#/components/responses/ApiResponse401",
      *   ),
      * )
      */
@@ -121,13 +112,6 @@ class AuthController extends Controller
      *     description="Success",
      *     @OA\JsonContent(
      *       @OA\Property(property="message", type="string", example="auth.logout_success"),
-     *     )
-     *   ),
-     *   @OA\Response(
-     *     response=401,
-     *     description="Non authorized",
-     *     @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Non authorized"),
      *     )
      *   ),
      * )

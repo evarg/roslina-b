@@ -12,6 +12,9 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TestAllController;
 use App\Http\Controllers\UploadController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SearchController;
+use App\Models\Packet;
+use App\Models\Producer;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,10 +89,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('producers', ProducerController::class);
 });
 
+
+/*
+    Tests etc.
+*/
+Route::apiResource('search', SearchController::class);
+Route::apiResource('search/:search', SearchController::class);
+
 Route::middleware('api_autt')->group(function () {
     Route::get('testuncio', function () {
-        $test = 'asdf';
-        return $test;
+        //$test = Packet::with('producer')->ByProducer(25);
+        $p = Packet::where('id', '<', 16)->ByProducer(25);
+
+        //$test = $p->packets()->get();
+//        $test->w
+        return $p;
     });
 });
 

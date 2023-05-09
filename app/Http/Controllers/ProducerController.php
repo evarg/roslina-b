@@ -13,26 +13,34 @@ class ProducerController extends Controller
 {
     /**
      * @OA\Get(
-     * path="/producers",
-     * summary="Retrieve profile information",
-     * description="Get profile short information",
-     * operationId="profileShow2",
-     * tags={"profile2"},
-     * security={ {"bearer": {} }},
-     * @OA\Response(
-     *    response=200,
-     *    description="Success",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="data", type="object", ref="#/components/schemas/producersList")
-     *        )
-     *     ),
-     * @OA\Response(
-     *    response=401,
-     *    description="User should be authorized to get profile information",
-     *    @OA\JsonContent(
-     *       @OA\Property(property="message", type="string", example="Not authorized"),
-     *    )
-     * )
+     *   path="/producers",
+     *   summary="Get list of all producers",
+     *   description="
+          Get list of all producers. Targer functionality is:
+           - get global defined producers
+           - get logged in user defined producers
+           - get shared producers of other users
+           - if user is admin get all producers
+      *     ",
+     *   tags={"producer"},
+     *   security={ {"bearer": {} }},
+     *   @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *       @OA\Property(property="packets", type="array",
+     *         @OA\Items(
+     *           allOf={
+     *             @OA\Schema(ref="#/components/schemas/User"),
+     *           },
+     *         ),
+     *       ),
+     *     )
+     *   ),
+     *   @OA\Response(
+     *     response=401,
+     *     ref="#/components/responses/ApiResponse401"
+     *   )
      * )
      */
     public function index()

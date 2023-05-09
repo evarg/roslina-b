@@ -97,4 +97,9 @@ class Packet extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function scopeByProducer($query, int $producerID)
+    {
+        return $query->where('producer_id', $producerID)->get();
+    }
 }
